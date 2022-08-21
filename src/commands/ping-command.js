@@ -5,8 +5,9 @@ const command = {
   async execute(interaction) {
     const validChannelID = "1010918234419114056"
     const channelID = interaction.channelId
+
     if (validChannelID !== channelID) {
-      await interaction.reply({ content: "❌ Cannot use this here ❌", ephemeral: true })
+      await interaction.reply({ content: "❌ CANNOT USE THIS HERE ❌", ephemeral: true })
       return
     }
 
