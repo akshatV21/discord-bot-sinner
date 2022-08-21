@@ -5,7 +5,7 @@ const { Client, GatewayIntentBits, Collection } = require("discord.js")
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
 
 const sinner = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
 })
 
 sinner.login(DISCORD_BOT_TOKEN)
