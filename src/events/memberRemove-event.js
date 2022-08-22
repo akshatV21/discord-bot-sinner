@@ -1,5 +1,5 @@
 const event = {
-  name: "guildMembeRemove",
+  name: "guildMemberRemove",
   once: false,
   execute(member) {
     const validChannelID = "1010931699682644030"
