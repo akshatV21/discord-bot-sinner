@@ -9,7 +9,8 @@ const command = {
     .addNumberOption(option => option.setName("count").setDescription("Number of memes you want!").setMaxValue(3)),
   async execute(interaction) {
     const api_url = process.env.MEME_API_URL
-    const count = interaction.options.getNumber("count") || 1
+    const isManual = interaction.manual
+    const count = interaction.options.getNumber("count") || isManual ? 1 : 3
     const subreddit = getSubredditName(interaction.channelId)
 
     const response = await axois.get(`${api_url}/${subreddit}/${count}`)
