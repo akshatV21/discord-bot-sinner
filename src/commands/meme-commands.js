@@ -21,7 +21,6 @@ const command = {
       memeEmbedsArray.push(embed)
     })
 
-    // interaction.guild.channels.cache.get(process.env.DANK_MEMES_CH_ID).send({ embeds: memeEmbedsArray })
     interaction.reply({ embeds: memeEmbedsArray })
   },
 }
