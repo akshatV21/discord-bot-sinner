@@ -11,6 +11,10 @@ const command = {
     const api_url = process.env.MEME_API_URL
     const count = interaction.options.getNumber("count") || 1
     const subreddit = getSubredditName(interaction.channelId)
+    if (!subreddit) {
+      interaction.reply({ content: "❌ CANNOT USE THIS HERE ❌", ephemeral: true })
+      return
+    }
 
     const response = await axois.get(`${api_url}/${subreddit}/${count}`)
     const memesArray = await response.data.memes
@@ -33,7 +37,8 @@ const getSubredditName = channelID => {
     },
   ]
   const channel = memeChannels.find(channel => channel.id === channelID)
-  return channel.name
+  if (channel) return channel.name
+  return null
 }
 
 module.exports = command
