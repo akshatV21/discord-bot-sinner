@@ -21,7 +21,7 @@ const command = {
 
     const memeEmbedsArray = []
     memesArray.forEach(meme => {
-      const embed = new EmbedBuilder().setTitle(meme.title).setImage(meme.preview[2])
+      const embed = new EmbedBuilder().setTitle(meme.title).setImage(meme.preview[meme.preview.length - 1])
       memeEmbedsArray.push(embed)
     })
 
@@ -34,6 +34,10 @@ const getSubredditName = channelID => {
     {
       name: "dankmemes",
       id: process.env.DANK_MEMES_CH_ID,
+    },
+    {
+      name: "hentaimemes",
+      id: process.env.HENTAI_MEMES_CH_ID,
     },
   ]
   const channel = memeChannels.find(channel => channel.id === channelID)
