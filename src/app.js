@@ -1,6 +1,6 @@
 require("dotenv").config()
 const { readdirSync } = require("fs")
-const { Client, GatewayIntentBits, Collection, CommandInteraction } = require("discord.js")
+const { Client, GatewayIntentBits, Collection } = require("discord.js")
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
 
