@@ -24,7 +24,7 @@ const command = {
 
       const triviaEmbed = new EmbedBuilder()
         .setTitle("TRIVIA")
-        .setDescription("Reply with the correct answer's options number only!!")
+        .setDescription("Reply with the correct answer's option number only!!")
         .setFields({ name: "Difficulty", value: difficulty }, { name: "Question", value: `${question}` })
         .setFooter({ text: "You have 15 seconds to answer this question!!" })
 
@@ -37,10 +37,10 @@ const command = {
 
       const filter = msg => msg.author.id === interaction.user.id
       const userReply = await channel.awaitMessages({ filter, time: 15000, max: 1, error: ["timeout!"] })
-      const userAnswer = Number(userReply.content) - 1
+      const userAnswer = Number(userReply.first().content) - 1
 
       const correctAnser = options.findIndex(option => option === correctOption)
-
+      console.log(userAnswer, correctAnser)
       if (userAnswer === correctAnser) {
         interaction.followUp(`${interaction.user} You got the answer right!!`)
       } else {
