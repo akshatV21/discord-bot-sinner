@@ -35,14 +35,14 @@ const command = {
       await interaction.reply({ embeds: [triviaEmbed], fetchReply: true })
       const filter = msg => msg.author.id === interaction.user.id
       const userReply = await channel.awaitMessages({ filter, time: 10000, max: 1, error: ["timeout!"] })
-      const userAnswer = userReply.content
+      const userAnswer = Number(userReply.content) - 1
 
       const correctAnser = options.findIndex(option => option === correctOption)
 
       if (userAnswer === correctAnser) {
-        interaction.followUp(`correct answer is: ${correctAnser}`)
+        interaction.followUp(`${interaction.user} You got the answer right!!`)
       } else {
-        interaction.followUp(`you got is wrong!`)
+        interaction.followUp(`${interaction.user} You missed the chance buddy!!\nCorrect answer was: ${correctOption}`)
       }
     } catch (error) {
       console.log(error)
