@@ -1,6 +1,7 @@
 require("dotenv").config()
 const { default: axios } = require("axios")
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js")
+const { getRandomlyPlacedOptions } = require("../helpers/command-helpers")
 
 const command = {
   data: new SlashCommandBuilder().setName("trivia").setDescription("asks the user trivia questions!!"),
@@ -25,7 +26,7 @@ const command = {
         .setTitle("TRIVIA")
         .setDescription("Reply with the correct answer's options number only!!")
         .setFields({ name: "Difficulty", value: difficulty }, { name: "Question", value: `${question}` })
-        .setFooter({ text: "You have 10 seconds to answer this question!!" })
+        .setFooter({ text: "You have 15 seconds to answer this question!!" })
 
       // setting up the embed
       options.forEach((option, index) => {
@@ -33,8 +34,9 @@ const command = {
       })
 
       await interaction.reply({ embeds: [triviaEmbed], fetchReply: true })
+
       const filter = msg => msg.author.id === interaction.user.id
-      const userReply = await channel.awaitMessages({ filter, time: 10000, max: 1, error: ["timeout!"] })
+      const userReply = await channel.awaitMessages({ filter, time: 15000, max: 1, error: ["timeout!"] })
       const userAnswer = Number(userReply.content) - 1
 
       const correctAnser = options.findIndex(option => option === correctOption)
@@ -45,24 +47,13 @@ const command = {
         interaction.followUp(`${interaction.user} You missed the chance buddy!!\nCorrect answer was: ${correctOption}`)
       }
     } catch (error) {
-      console.log(error)
+      console.log(`[ERROR] - ${error}`)
+      interaction.reply({
+        content: "Internal server error!!",
+        ephemeral: true,
+      })
     }
   },
-}
-
-const getRandomlyPlacedOptions = optionsArray => {
-  const randomIndexes = []
-  const finalArray = []
-
-  while (randomIndexes.length !== 4) {
-    const randomIndex = Math.floor(Math.random() * optionsArray.length)
-    if (randomIndexes.includes(randomIndex)) continue
-
-    randomIndexes.push(randomIndex)
-    finalArray.push(optionsArray[randomIndex])
-  }
-
-  return finalArray
 }
 
 module.exports = command
