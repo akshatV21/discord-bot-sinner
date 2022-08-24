@@ -17,16 +17,33 @@ const command = {
       const response = await axios.get(process.env.TRIVIA_API_URL)
       const trivia = await response.data.results[0]
 
-      const { category, question, difficulty } = trivia
-      const correctAnswer = trivia.correct_answer
-      // const options = getRandomlyPlacedOptions([...trivia.incorrect_answers, correctAnswer])
+      const { question, difficulty } = trivia
+      const correctOption = trivia.correct_answer
+      const options = getRandomlyPlacedOptions([...trivia.incorrect_answers, correctOption])
 
-      const triviaEmbed = new EmbedBuilder().setTitle("TRIVIA").setFields({
-        name: "Question",
-        value: question,
+      const triviaEmbed = new EmbedBuilder()
+        .setTitle("TRIVIA")
+        .setDescription("Reply with the correct answer's options number only!!")
+        .setFields({ name: "Difficulty", value: difficulty }, { name: "Question", value: `${question}` })
+        .setFooter({ text: "You have 10 seconds to answer this question!!" })
+
+      // setting up the embed
+      options.forEach((option, index) => {
+        triviaEmbed.addFields({ name: `${index + 1}) ${option}`, value: "----------------------" })
       })
 
-      interaction.reply({ embeds: [triviaEmbed] })
+      await interaction.reply({ embeds: [triviaEmbed], fetchReply: true })
+      const filter = msg => msg.author.id === interaction.user.id
+      const userReply = await channel.awaitMessages({ filter, time: 10000, max: 1, error: ["timeout!"] })
+      const userAnswer = userReply.content
+
+      const correctAnser = options.findIndex(option => option === correctOption)
+
+      if (userAnswer === correctAnser) {
+        interaction.followUp(`correct answer is: ${correctAnser}`)
+      } else {
+        interaction.followUp(`you got is wrong!`)
+      }
     } catch (error) {
       console.log(error)
     }
