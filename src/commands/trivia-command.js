@@ -15,13 +15,16 @@ const command = {
 
       const channel = interaction.guild.channels.cache.get(validChannelID)
 
+      // fetching the question
       const response = await axios.get(process.env.TRIVIA_API_URL)
       const trivia = await response.data.results[0]
 
+      // destructuring the question
       const { question, difficulty } = trivia
       const correctOption = trivia.correct_answer
       const options = getRandomlyPlacedOptions([...trivia.incorrect_answers, correctOption])
 
+      // creating the question embed
       const triviaEmbed = new EmbedBuilder()
         .setTitle("TRIVIA")
         .setDescription("Reply with the correct answer's option number only!!")
@@ -35,13 +38,14 @@ const command = {
 
       await interaction.reply({ embeds: [triviaEmbed], fetchReply: true })
 
+      // getting the user's reply/answer
       const filter = msg => msg.author.id === interaction.user.id
-      const userReply = await channel.awaitMessages({ filter, time: 15000, max: 1, error: ["timeout!"] })
+      const userReply = await channel.awaitMessages({ filter, time: 15000, maxMatches: 1, error: ["timeout!"] })
       const userAnswer = Number(userReply.first().content) - 1
 
-      const correctAnser = options.findIndex(option => option === correctOption)
-      console.log(userAnswer, correctAnser)
-      if (userAnswer === correctAnser) {
+      const correctAnswer = options.findIndex(option => option === correctOption)
+
+      if (userAnswer === correctAnswer) {
         interaction.followUp(`${interaction.user} You got the answer right!!`)
       } else {
         interaction.followUp(`${interaction.user} You missed the chance buddy!!\nCorrect answer was: ${correctOption}`)
