@@ -1,20 +1,20 @@
-const { default: UserModel } = require("../models/user-model")
+const UserModel = require("../models/user-model")
 const calculateXP = require("../helpers/xp-calc")
 
-export const saveUserTriviaStats = async options => {
+const saveUserTriviaStats = async options => {
   try {
     const { gotCorrect, timeTaken, user } = options
 
     const xp = gotCorrect ? calculateXP(timeTaken) : 0
 
     // fetching the user
-    const member = await UserModel.findOne({ userID: user.id }, "stats")
+    const member = await UserModel.findOne({ userID: user.id })
     if (!member) {
       // creating the user
       const newUser = new UserModel({
         userID: user.id,
         username: user.username,
-        tag: user.tag,
+        tag: user.discriminator,
       })
 
       // updating the user stats
@@ -24,6 +24,7 @@ export const saveUserTriviaStats = async options => {
       // updating the user stats
       member.stats.trivia = updateStats(member, gotCorrect, xp)
       await member.save()
+      return { ...member.stats.trivia }
     }
   } catch (error) {
     throw new Error(error)
@@ -39,3 +40,5 @@ const updateStats = (member, gotCorrect, xp) => {
 
   return member.stats.trivia
 }
+
+module.exports = { saveUserTriviaStats }

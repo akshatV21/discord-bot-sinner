@@ -2,6 +2,7 @@ require("dotenv").config()
 const { default: axios } = require("axios")
 const { EmbedBuilder, MessageCollector } = require("discord.js")
 const { getRandomlyPlacedOptions } = require("../helpers/command-helpers")
+const { saveUserTriviaStats } = require("../helpers/mongo-helpers")
 
 const stringCommand = {
   command: "?trivia",
@@ -39,24 +40,31 @@ const stringCommand = {
     // sending the embed
     await channel.send({ embeds: [triviaEmbed] })
 
+    let timeTakenByUserToAnswer = 0
+    const timer = setInterval(() => timeTakenByUserToAnswer++, 1000)
+
     // getting the user's answer/response
     const filter = msg => msg.author.id === message.author.id
     const collector = new MessageCollector(channel, { filter, time: 15000, max: 1 })
 
     // listening to events
     collector.on("collect", async msg => {
+      clearInterval(timer)
       const userAnswer = Number(msg.content) - 1
 
       if (userAnswer === correctOption) {
         message.reply(`${message.author} 👍 You got the answer right!! 👍`)
+        await saveUserTriviaStats({ user: message.author, gotCorrect: true, timeTaken: timeTakenByUserToAnswer })
       } else {
         message.reply(`${message.author} ❌ You missed the chance buddy!! ❌\nCorrect answer was: ${correct_answer}`)
+        await saveUserTriviaStats({ user: message.author, gotCorrect: false, timeTaken: timeTakenByUserToAnswer })
       }
     })
 
-    collector.on("end", (collected, reason) => {
+    collector.on("end", async (collected, reason) => {
       if (collected.size === 0 && reason === "time") {
         message.reply(`${message.author} ⌛ TIMEOUT!! ⌛`)
+        await saveUserTriviaStats({ user: message.author, gotCorrect: false, timeTaken: timeTakenByUserToAnswer })
       }
     })
   },

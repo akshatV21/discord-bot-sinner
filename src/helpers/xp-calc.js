@@ -8,4 +8,4 @@ const calculateXP = num => {
   return xp
 }
 
-export default calculateXP
+module.exports = calculateXP
