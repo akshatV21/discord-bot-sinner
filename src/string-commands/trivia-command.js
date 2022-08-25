@@ -37,8 +37,8 @@ const stringCommand = {
     })
 
     // sending the embed
-    await channel.send({ embed: [triviaEmbed] })
+    await channel.send({ embeds: [triviaEmbed] })
   },
 }
 
-export default stringCommand
+module.exports = stringCommand

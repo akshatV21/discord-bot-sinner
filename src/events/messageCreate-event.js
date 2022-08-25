@@ -9,10 +9,12 @@ const event = {
       await stringCommand.execute(message)
     } catch (error) {
       console.log(`[ERROR] - ${error}`)
-      interaction.reply({
+      message.reply({
         content: "Internal server error!!",
         ephemeral: true,
       })
     }
   },
 }
+
+module.exports = event
