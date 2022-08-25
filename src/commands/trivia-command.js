@@ -20,39 +20,38 @@ const command = {
       const trivia = await response.data.results[0]
 
       // destructuring the question
-      const { question, difficulty } = trivia
-      const correctOption = trivia.correct_answer
-      const options = getRandomlyPlacedOptions([...trivia.incorrect_answers, correctOption])
+      const { question, correct_answer, incorrect_answers } = trivia
+      const options = getRandomlyPlacedOptions([...incorrect_answers, correct_answer])
+      const correctOption = options.findIndex(option => option === correct_answer)
 
       // creating the question embed
       const triviaEmbed = new EmbedBuilder()
         .setTitle("TRIVIA")
         .setDescription("Reply with the correct answer's option number only!!")
-        .setFields({ name: "Difficulty", value: difficulty }, { name: "Question", value: `${question}` })
+        .setFields({ name: "Question", value: `${question}` })
         .setFooter({ text: "You have 15 seconds to answer this question!!" })
 
-      // setting up the embed
+      // adding the options to the embed field
       options.forEach((option, index) => {
         triviaEmbed.addFields({ name: `${index + 1}) ${option}`, value: "----------------------" })
       })
 
+      // sending the embed field
       await interaction.reply({ embeds: [triviaEmbed], fetchReply: true })
 
-      // getting the user's reply/answer
+      // getting the user's answer/response
       const filter = msg => msg.author.id === interaction.user.id
-      const userReply = await channel.awaitMessages({ filter, time: 15000, maxMatches: 1, error: ["timeout!"] })
-      const userAnswer = Number(userReply.first().content) - 1
+      const userResponse = await channel.awaitMessages({ filter, time: 10000, maxMatches: 1, error: ["time", "maxMatches"] })
+      const userAnswer = Number(userResponse.first().content) - 1
 
-      const correctAnswer = options.findIndex(option => option === correctOption)
-
-      if (userAnswer === correctAnswer) {
+      if (userAnswer === correctOption) {
         interaction.followUp(`${interaction.user} You got the answer right!!`)
       } else {
-        interaction.followUp(`${interaction.user} You missed the chance buddy!!\nCorrect answer was: ${correctOption}`)
+        interaction.followUp(`${interaction.user} You missed the chance buddy!!\nCorrect answer was: ${correct_answer}`)
       }
     } catch (error) {
       console.log(`[ERROR] - ${error}`)
-      interaction.reply({
+      interaction.followUp({
         content: "Internal server error!!",
         ephemeral: true,
       })
