@@ -2,10 +2,11 @@ const event = {
   name: "messageCreate",
   once: false,
   async execute(message, client) {
-    const stringCommand = client.stringCommands.get(message.content)
-    if (!stringCommand) return
-
     try {
+      const stringCommand = client.stringCommands.get(message.content)
+      if (!stringCommand) {
+        await updateRandomXP(message.author)
+      }
       await stringCommand.execute(message)
     } catch (error) {
       console.log(`[ERROR] - ${error}`)

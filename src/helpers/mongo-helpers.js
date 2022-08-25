@@ -67,4 +67,4 @@ const saveUserInDB = async user => {
   }
 }
 
-module.exports = { saveUserTriviaStats }
+module.exports = { saveUserTriviaStats, updateRandomXP }
