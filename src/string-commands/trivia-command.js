@@ -1,6 +1,6 @@
 require("dotenv").config()
 const { default: axios } = require("axios")
-const { EmbedBuilder } = require("discord.js")
+const { EmbedBuilder, MessageCollector } = require("discord.js")
 const { getRandomlyPlacedOptions } = require("../helpers/command-helpers")
 
 const stringCommand = {
@@ -38,6 +38,27 @@ const stringCommand = {
 
     // sending the embed
     await channel.send({ embeds: [triviaEmbed] })
+
+    // getting the user's answer/response
+    const filter = msg => msg.author.id === message.author.id
+    const collector = new MessageCollector(channel, { filter, time: 15000, max: 1 })
+
+    // listening to events
+    collector.on("collect", async msg => {
+      const userAnswer = Number(msg.content) - 1
+
+      if (userAnswer === correctOption) {
+        channel.reply(`${message.author} 👍 You got the answer right!! 👍`)
+      } else {
+        channel.reply(`${message.author} ❌ You missed the chance buddy!! ❌\nCorrect answer was: ${correct_answer}`)
+      }
+    })
+
+    collector.on("end", (collected, reason) => {
+      if (collected.size === 0 && reason === "time") {
+        channel.reply(`${message.author} ⌛ TIMEOUT!! ⌛`)
+      }
+    })
   },
 }
 
