@@ -11,11 +11,7 @@ const saveUserTriviaStats = async options => {
     const member = await UserModel.findOne({ userID: user.id })
     if (!member) {
       // creating the user
-      const newUser = new UserModel({
-        userID: user.id,
-        username: user.username,
-        tag: user.discriminator,
-      })
+      const newUser = await saveUserInDB(user)
 
       // updating the user stats
       newUser.stats.trivia = updateStats(newUser, gotCorrect, xp)
@@ -32,6 +28,24 @@ const saveUserTriviaStats = async options => {
   }
 }
 
+const updateRandomXP = async user => {
+  try {
+    const xpAmount = Math.ceil(Math.random() * 100)
+    const member = await UserModel.findOnce({ userID: user.id })
+
+    if (!member) {
+      const newUser = await saveUserInDB(user)
+      newUser.stats.randomXP += xpAmount
+      await newUser.save()
+    } else {
+      member.stats.randomXP += xpAmount
+      await member.save()
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const updateStats = (member, gotCorrect, xp) => {
   member.stats.trivia.played += 1
   member.stats.trivia.gotCorrect += gotCorrect ? 1 : 0
@@ -40,6 +54,17 @@ const updateStats = (member, gotCorrect, xp) => {
   member.stats.trivia.xpGained += xp
 
   return member.stats.trivia
+}
+
+const saveUserInDB = async user => {
+  try {
+    const member = new UserModel({ userID: user.id, username: user.username, tag: user.discriminator })
+    await member.save()
+
+    return member
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 module.exports = { saveUserTriviaStats }
