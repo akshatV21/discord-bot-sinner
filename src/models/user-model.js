@@ -16,7 +16,7 @@ const userSchema = new Schema({
   stats: {
     randomXP: {
       type: Number,
-      required: true,
+      default: 0,
     },
     trivia: {
       played: {

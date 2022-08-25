@@ -31,7 +31,7 @@ const saveUserTriviaStats = async options => {
 const updateRandomXP = async user => {
   try {
     const xpAmount = Math.ceil(Math.random() * 100)
-    const member = await UserModel.findOnce({ userID: user.id })
+    const member = await UserModel.findOne({ userID: user.id })
 
     if (!member) {
       const newUser = await saveUserInDB(user)
