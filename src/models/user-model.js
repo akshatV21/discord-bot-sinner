@@ -1,4 +1,4 @@
-const { Schema } = require("mongoose")
+const { Schema, model } = require("mongoose")
 
 const userSchema = new Schema({
   userID: {
@@ -15,9 +15,30 @@ const userSchema = new Schema({
   },
   stats: {
     trivia: {
-      played: Number,
-      gotCorrect: Number,
-      gotIncorrect: Number,
+      played: {
+        type: Number,
+        default: 0,
+      },
+      gotCorrect: {
+        type: Number,
+        default: 0,
+      },
+      gotIncorrect: {
+        type: Number,
+        default: 0,
+      },
+      c_i_ratio: {
+        type: Number,
+        default: 0,
+      },
+      xpGained: {
+        type: Number,
+        default: 0,
+      },
     },
   },
 })
+
+const UserModel = model("user", userSchema)
+
+export default UserModel
