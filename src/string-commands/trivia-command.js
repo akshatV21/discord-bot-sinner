@@ -53,18 +53,20 @@ const stringCommand = {
       const userAnswer = Number(msg.content) - 1
 
       if (userAnswer === correctOption) {
-        message.reply(`${message.author} 👍 You got the answer right!! 👍`)
-        await saveUserTriviaStats({ user: message.author, gotCorrect: true, timeTaken: timeTakenByUserToAnswer })
+        const stats = await saveUserTriviaStats({ user: message.author, gotCorrect: true, timeTaken: timeTakenByUserToAnswer })
+        message.reply(`${message.author} 👍 You got the answer right!! 👍\nYour totalXP: ${stats.xpGained}xp`)
       } else {
-        message.reply(`${message.author} ❌ You missed the chance buddy!! ❌\nCorrect answer was: ${correct_answer}`)
-        await saveUserTriviaStats({ user: message.author, gotCorrect: false, timeTaken: timeTakenByUserToAnswer })
+        const stats = await saveUserTriviaStats({ user: message.author, gotCorrect: false, timeTaken: timeTakenByUserToAnswer })
+        message.reply(
+          `${message.author} ❌ You missed the chance buddy!! ❌\nCorrect answer was: ${correct_answer}\nYour totalXP: ${stats.xpGained}xp`
+        )
       }
     })
 
     collector.on("end", async (collected, reason) => {
       if (collected.size === 0 && reason === "time") {
-        message.reply(`${message.author} ⌛ TIMEOUT!! ⌛`)
         await saveUserTriviaStats({ user: message.author, gotCorrect: false, timeTaken: timeTakenByUserToAnswer })
+        message.reply(`${message.author} ⌛ TIMEOUT!! ⌛\nYour totalXP: ${stats.xpGained}xp`)
       }
     })
   },

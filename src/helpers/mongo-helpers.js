@@ -20,6 +20,7 @@ const saveUserTriviaStats = async options => {
       // updating the user stats
       newUser.stats.trivia = updateStats(newUser, gotCorrect, xp)
       await newUser.save()
+      return { ...newUser.stats.trivia }
     } else {
       // updating the user stats
       member.stats.trivia = updateStats(member, gotCorrect, xp)
