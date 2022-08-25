@@ -26,6 +26,15 @@ COMMAND_FILES.forEach(file => {
   sinner.commands.set(command.data.name, command)
 })
 
+// string commands
+const STRING_COMMAND_FILES = readdirSync("./src/string-commands").filter(file => file.endsWith(".js"))
+sinner.stringCommands = new Collection()
+
+STRING_COMMAND_FILES.forEach(file => {
+  const stringCommand = require(`./string-commands/${file}`)
+  sinner.stringCommands.set(stringCommand.command, stringCommand)
+})
+
 // events
 const EVENT_FILES = readdirSync("./src/events").filter(file => file.endsWith(".js"))
 
@@ -34,7 +43,7 @@ EVENT_FILES.forEach(file => {
   if (event.once) {
     sinner.on(event.name, (...args) => event.execute(...args, commands))
   } else {
-    sinner.on(event.name, (...args) => event.execute(...args))
+    sinner.on(event.name, (...args) => event.execute(...args, sinner))
   }
 })
 
