@@ -48,15 +48,15 @@ const stringCommand = {
       const userAnswer = Number(msg.content) - 1
 
       if (userAnswer === correctOption) {
-        channel.reply(`${message.author} 👍 You got the answer right!! 👍`)
+        message.reply(`${message.author} 👍 You got the answer right!! 👍`)
       } else {
-        channel.reply(`${message.author} ❌ You missed the chance buddy!! ❌\nCorrect answer was: ${correct_answer}`)
+        message.reply(`${message.author} ❌ You missed the chance buddy!! ❌\nCorrect answer was: ${correct_answer}`)
       }
     })
 
     collector.on("end", (collected, reason) => {
       if (collected.size === 0 && reason === "time") {
-        channel.reply(`${message.author} ⌛ TIMEOUT!! ⌛`)
+        message.reply(`${message.author} ⌛ TIMEOUT!! ⌛`)
       }
     })
   },
