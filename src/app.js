@@ -1,6 +1,7 @@
 require("dotenv").config()
 const { readdirSync } = require("fs")
 const { Client, GatewayIntentBits, Collection } = require("discord.js")
+const { connectToDatabase } = require("./mongo")
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
 
@@ -8,7 +9,10 @@ const sinner = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
 })
 
-sinner.login(DISCORD_BOT_TOKEN)
+const startBotServer = async () => {
+  await connectToDatabase()
+  sinner.login(DISCORD_BOT_TOKEN)
+}
 
 // commands
 const commands = []
@@ -33,3 +37,5 @@ EVENT_FILES.forEach(file => {
     sinner.on(event.name, (...args) => event.execute(...args))
   }
 })
+
+startBotServer()
