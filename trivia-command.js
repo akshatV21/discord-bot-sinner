@@ -1,7 +1,7 @@
 require("dotenv").config()
 const { default: axios } = require("axios")
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js")
-const { getRandomlyPlacedOptions } = require("../helpers/command-helpers")
+const { getRandomlyPlacedOptions } = require("./src/helpers/command-helpers")
 
 const command = {
   data: new SlashCommandBuilder().setName("trivia").setDescription("asks the user trivia questions!!"),
