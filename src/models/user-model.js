@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose")
+const { Schema, model, Types } = require("mongoose")
 
 const userSchema = new Schema({
   userID: {
@@ -36,6 +36,28 @@ const userSchema = new Schema({
         default: 0,
       },
       xpGained: {
+        type: Number,
+        default: 0,
+      },
+    },
+    poke: {
+      level: {
+        type: Number,
+        default: 0,
+      },
+      pokedex: {
+        type: [Types.ObjectId],
+        default: [],
+      },
+      pokecoins: {
+        type: Number,
+        default: 0,
+      },
+      xpGained: {
+        type: Number,
+        default: 0,
+      },
+      rareCandies: {
         type: Number,
         default: 0,
       },
