@@ -30,15 +30,16 @@ const saveUserTriviaStats = async options => {
 
 const updateRandomXP = async user => {
   try {
-    const xpAmount = Math.ceil(Math.random() * 100)
+    const xpAmounts = [25, 50, 75, 100]
+    const randomIndex = Math.floor(Math.random() * xpAmounts.length)
     const member = await UserModel.findOne({ userID: user.id })
 
     if (!member) {
       const newUser = await saveUserInDB(user)
-      newUser.stats.randomXP += xpAmount
+      newUser.stats.randomXP += xpAmounts[randomIndex]
       await newUser.save()
     } else {
-      member.stats.randomXP += xpAmount
+      member.stats.randomXP += xpAmounts[randomIndex]
       await member.save()
     }
   } catch (error) {
